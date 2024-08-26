@@ -3,9 +3,9 @@
 
         access_token_url: 'https://cloud.lifx.com/oauth/token',
         authorization_url: 'https://cloud.lifx.com/oauth/authorize',
-        client_id: '99db7ef92904e89f9ac166acaa41ab6df3477acbfe8486eb09994038e34b81a1',
-        client_secret: '97eea43ce07ff786f0d6e40d805be7263f0f5752e6f8d2155b45ce6aff7c4150',
-        redirect_url: 'http://whoisjuan.github.io/lifx/auth/',
+        client_id: 'YOUR_CLIENT_ID_HERE',
+        client_secret: 'YOUR_CLIENT_SECRET_HERE',
+        redirect_url: 'YOUR_REDIRECT_URL_HERE',
         scope: 'remote_control:all',
         response_type: 'code',
         grant_type: 'authorization_code',
