@@ -19,7 +19,7 @@ You must use your own API credentials for this extension to work:
 
 1. Go to [api.developer.lifx.com](https://api.developer.lifx.com) and sign in or create an account.
 2. Create a new OAuth 2 application to get your `client_id` and `client_secret`.
-3. In the `oauth2.js` file, replace the existing `client_id` and `client_secret` values with your new credentials.
+3. In the `libs/chrome-ex-oauth2oauth2.js` file, replace the existing `client_id` and `client_secret` values with your new credentials.
 
 ## Usage
 
