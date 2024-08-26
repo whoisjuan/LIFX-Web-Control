@@ -7,7 +7,7 @@ This is an open-source version of the previously maintained LIFX Web Control Chr
 To use this extension in Chrome:
 
 1. Clone or download this repository.
-2. Generate your own API credentials at [api.developer.lifx.com](https://api.developer.lifx.com).
+2. Generate your own API credentials in [LIFX Settings]((https://cloud.lifx.com/settings)).
 3. Open the file `libs/chrome-ex-oauth2/oauth2.js` and replace the `client_id` and `client_secret` with your own generated credentials.
 4. Open Chrome and navigate to `chrome://extensions/`.
 5. Enable "Developer mode" in the top right corner.
