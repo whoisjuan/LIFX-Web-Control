@@ -1,0 +1,255 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+
+<head>
+    <title>LIFX Web Control</title>
+    <link rel="stylesheet" href="custom.css">
+    <link rel="stylesheet" href="colorpicker.css">
+    <link rel="stylesheet" href="mdl/material.min.css">
+    <script src="mdl/material.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-ui.min.js"></script>
+    <!--getmdl-select-->
+    <script src="mdl/getmdl-select.min.js"></script>
+    <link rel="stylesheet" href="mdl/getmdl-select.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.structure.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.theme.min.css">
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+     -->
+</head>
+
+<body>
+    <!-- <body style="overflow:hidden;"> -->
+    <div id="bodybg" class="demo-card-wide mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__titl centered"><span><img class="logo" src="iconslifx/lifxBlack.png" alt=""></span><span><h2 class="mdl-card__title-text headertitle">Web Control</h2></span></div>
+        <button id="settings" class="mdl-button mdl-js-button mdl-button--icon icon menu2"><img class="" width="20" height="20" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABD0lEQVRoQ+2Y3Q3CMAyEv04AI8AGMAmMApPAKDAJjAAbwAbIUnmpVJootiqjy2sSx/cj69qO5KtL3j8CMLeCUuBfFVgBJ2DTA7wDR+DhDTjCQtb8DVgOmn0BW28QEQAuwG6E6Suw91QhAoAxvRhp0iy0zgzgCZjF3FaEAuktZAzb1Bna6N1PJddJFKGA2cNAnAdj9OA9geyhKABuHp8qJABTDEXvS4FohqfqS4ERhpRGp6zz3Y+wUPoooTRaap+oKJHeQkqjc1uo5v3msxFjtLmpmgICUMNWxFkpEMFqTc0oBZRGS1WIUCB9lFAaLbWP0uiP72H9Gy21UcQUKn3b5ZwAuNDYUEQKNJDncjW9Ah8/NDwx9R91ZgAAAABJRU5ErkJggg=="></button>
+        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="settings">
+            <li id="logout" class="mdl-menu__item">Log-out / Disconnect &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+            <li id="dark-mode" class="mdl-menu__item">Turn On Dark Theme &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+            <a id="about-ext" href="http://www.whoisjuan.me/lifx/" target="_blank"><li id="logout" class="mdl-menu__item">About &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li></a>
+        </ul>
+        <div id="oauthSection">
+            <div class="centered">
+                <p class="tokenP">Please login into your LIFX account to authorize LIFX Web Control.</p>
+            </div>
+            <div class="centered button-cont">
+                <button id="oauth-button" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored black">Login with LIFX</button>
+                <p class="alt-auth">or <a id="manual-token" style="font-weight: 600; cursor: pointer; text-decoration: underline;">click here</a> to authorize manually.</p>
+            </div>
+        </div>
+        <div id="tokenSection">
+            <p class="tokenP">Please visit this <a target="_blank" style="font-weight: 600;" href="https://cloud.lifx.com/settings">link</a> and login with your LIFX account to generate a Token. Copy and paste the generated Token in the field below to get started.</p>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <div class="textfield">
+                    <input class="mdl-textfield__input form-control" type="text" id="field">
+                    <label class="mdl-textfield__label" for="sample1">Token</label>
+                </div>
+                <div class="textsubmit">
+                    <span><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect black" id="submitValue" type="submit" value="Go">SUBMIT</button></span>
+                </div>
+            </div>
+            <div class="centered">
+                <p class="alt-auth">or <a id="oauth-token" style="font-weight: 600; cursor: pointer; text-decoration: underline;">click here</a> to go back and authorize through LIFX login.</p>
+            </div>
+        </div>
+        <br>
+        <div id="bulbSection" class="mdl-card__actions mdl-card--border">
+            <h3 class="mdl-card__title-text custom-head-font">Select a Light, Group or Scene:</h3>
+            <div class="radioButtonsRow">
+                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect leftButton" for="option-1">
+                    <input type="radio" id="option-1" class="mdl-radio__button optionLights" name="options" value="1">
+                    <span class="mdl-radio__label">Lights</span>
+                </label>
+                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
+                    <input type="radio" id="option-2" class="mdl-radio__button optionGroups" name="options" value="2">
+                    <span class="mdl-radio__label">Groups</span>
+                </label>
+                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect rightButton" for="option-3">
+                    <input type="radio" id="option-3" class="mdl-radio__button optionScenes" name="options" value="3">
+                    <span class="mdl-radio__label">Scenes</span>
+                </label>
+            </div>
+            <select id="dropdownBulb">
+                <option value="all">All Lights</option>
+            </select>
+            <select id="dropdownGroup">
+                <option value="all">All Groups</option>
+            </select>
+            <div id="dropdownSceneContainer">
+                <select id="dropdownScene">
+                    <option value="select">Select Scene</option>
+                </select>
+                <span><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect black"id="applyScene" type="submit" value="Go">APPLY</button></span>
+            </div>
+        </div>
+        <div id="brightSection" class="mdl-card__actions mdl-card--border">
+            <h3 class="mdl-card__title-text inline custom-head-font">Select Brightness Level:</h3>
+            <button id="togglePower" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect inline toggleButton black">ON / OFF</button>
+            <br>
+            <br>
+            <div id="slider">
+                <div id="custom-handle" class="ui-slider-handle"></div>
+            </div>
+            <!--   <div class="slider">
+                <span class="label1"><img class="iconsize" src="data:image/png;base64,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" alt=""></span>
+                <span class="label2"><img class="iconsize" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAA6CAYAAAAURcGYAAAAAXNSR0IArs4c6QAABJRJREFUaAXtmVty00gUho8UwzxOdkBYAd4BYi5VvBFWgPMwAzyNd0CyAjJPzMBDyArI41QNDGIHYQUTdhC/DRdL8/+Wj91qS3Kr3XIM5a5KqS+n/3O+vqmtRPKVpJ/kz7xtqHHbDl+TfW9ZsImc7F6Tz7cyyfqRRLsiecI+GMY9lPeQXUi55BeRyEXREKUoX8YSn3+Wa+9TObhc6NBRBWJYTD/L8z4CeoCWBH/9RYuVas7RO8XAnP4tvzLvlMxl+VoeVsZNIdOuNHNoeAKoAf72nDz6GXGwOHjDH+WPC+SP38ij3/2kmntN4DhTWHavYMql1twjYOt0WR8Dcohle7/NTLqE0SvA8rdwtFvXAaP8XiQ6L/ZRltIukp3LumCKZT2e6sUJ9yd2KffsLfa1EyEzyd+i3506TbuPS7mXS3ZYATZCQGcQOBvL9bTtIWAFmGogPJx25FOC8j4Gah/P77UN5V3GwjatW/WJZRnds0SOvsj147ZAlkZlcao5GTSC9uTTEIZP5sYLscybPHIL77muwOzYCEpfdn3IMg+UEf5my6Mn//VRTvHXeSp8zccXW+GDi1PzuG+yh3KemgbZZPObNV3mYw7kLEWSn88KATKAi1JTB4eLsQfMlvB5nMK/lVXLsZTb2peiRJ7t9ST+1+yK5XH/jTw8M+tC53+QZwO8205M3S+S3Uzl8YVZt0o+phhgTi2RE55mVl2wIrUjiZ+agowhJBi1JzeUMd4vmL0H6ozvnJ58fIXyHa0L+Sy0y5cGxtDkw/UQMTUmR9V0xI7MBuzFBNei0rIpt/uVCk3shnI6Cj1rlJ+dw7hpHxbXrLlXHC6DkIDUoubcwyT3jr6tuiDFybJUpbF8l+B6xDvkDa2bAgpu7gda5/OsAuNgwud+Wz3XnzyzmaMD3hpiieiML/ZZWnUGq8AgPsJpOejimqeBl+BYyUsvYBJkgwDWgdGHdcGm+6BpAY7qTYB8P7lGQFvOumU/WgcYfVbCsaEeMH7q8g7k5cB+l0F2bWBkqIVjYxUgDhv8Jvt4yPamtCPRkLaGzVrB6LcRjgYExCeIIfOasKxua77hec9sowa1zLqu8xhct2TfEJqOYyq2tV8Wha23zJ7tS2fORWRTbb5puNINZVNngHEt2wZVsW9nrmpU1l23PVCsEffecy1HsnRPtWLorOi85/LFTxHOQaHvmbNxQENnuOlnAJ8ZGC37hBCQpyTlDMfPAPg61S/1diiwTxefEBxct7uh+ATp08clcBcb55lzEds0Gx84532Hg+TDVQJ7wGX7LkHTJpJscJVwzj957CCrPoerDcBO8Tk+KFjL9+okFI+ZKxD+kccv8QP0QIH02QWYard9es9cW0er2vvM3Ko+t/23I7AdgXYjUHug3JUXyVhy/ufndjvJ9VrjM+M7fCM9/Et+SW3PtXBquKmQTVAa+1I4NdwUSBcojdkZTjtcFWQbKI21NZx2XBekD5TG6A2nAl1BrgKlsa0Mp0KhIENAaUzB4FTQFzIklMYSHE6FXSG7gNIYOoNTB3WQXUKp787h1JFCslx3o1DbUM//ATLxnjIlyrpBAAAAAElFTkSuQmCC" alt=""></span>
+                <span class="label3"><img class="iconsize" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAA6CAYAAAAURcGYAAAAAXNSR0IArs4c6QAABIJJREFUaAXtmUly00AUhp8UA0tyBHMCfAPEVMWOcALMgmmFb0ByAsKKaRFyArKkikncIJyAcIN4x2SJ/7fcdqs1uNVqKUClq1Lq4U1fz+4E8o+ka/IibRpq2FThX5IfrAs2kr3NM/LrYiLJKJBgUySNqINuHKI8RLaQUkmPApGjrCGIUT4OJTz8JWe+xHLnuKDQUQViKKbr8nKEgG6jJcLfqCjRquYQ2jE6Zv+d3GPeKunT8r3cL42bhnS53Mih4TGgxvgbWnl0E2JnsfMmV+X5EfK7H+TBUzdT9VpzOI4Upt0biHKq1Wt4bF1M611ATjBtbzUZSZswBhlY+gmONqsU0MtfRILDbB0lMeUC2TiuCiab1rOFvTDi+sQq5Zq9SF0zETKR9BP0LlfZNHVsyoNUku0SsCkCOoCBg5mcjZtuAkaAsQqEm9OG/IxQ3kJHbeF7XrWhvMlY2Kbq2n4xLYObhpGd33J2tymQYaO0uLA57zSCDuTnBIKPV8KFWFZNDrnCOdcVmBkbQenLrPdZ5oYyxd9yegzk+wjlGH+dp8zXqn+xFL7ZONW3+zp5WE5jXSCZL369pst8yI5cpkDSw2XBQwZwQazbweairQG9xX8eu/CjvNV8LPm25qUgkmfDgYRfdVVMj1sf5P6BXuc7f0WejXG27el2f0tyIZaHR3pdm3xIY4DZN4zscTcz6rwVaTuQ8IlukDH4BKPt+Q1lhvMFo3dbOeOZM5Afb1C+rOp8fjPb+UsDY6jzYbuJ6DbmW9Wix3b0BqzFCNei3LTJt7uVMptYDfm043vUaH65D+OmvZ1ds1ZesbmMfQLSFm2uPMxzn+nbqPNSXMLR2kzO8R74TbfsC7AMjJ2Jg3xL9+czn4PjrSGUgM54sC9TW8AyMBifYrccd3HNU4Hn4FjJSy9gImS9AFaB0YdxwaZ7r6kAR+t1gDyfbCOgLEfdkJ/2AUafpXBsqAYMn9icgbwcmGcZzPYGRoZKODaWAfIM3JAf22yvSxsSTCiryfQKRr+1cBQgIJ4gJsyrhGl1SeVrvjf1NtqgLb2u6/xaOAbwUR6+NgIZGeVCER0w1CtLbOjNneSt4Drx3IPR/xpufnHuoRNbu6h7iK0yfjpyVT3TZ73zT54+g+zTl/Oaa9iTuXtqX4DWaw4/hfZdg4LugatuGz1ruMUzgMsITNc9IbQBqNO1huMzAF6n1t5MTGfU6eIJwfRTVraGo7JLkC46ZYG61DWCc3FwkjoucNbrznyP6RvUAS7ZsgmaMoEk476BdH/4PemWyp7DlSWA7eM5fqzKPr4Nz9W5S4eRy0Ll7zP8AL1jBt4FmOnDtuw8crYOfMm5jJwv36d2TnvgtAfseqCwodyQV9FMUv7H55KdiZORwuvaZ7yNbr+Vu3FVBAU4Jfi3QtpAKYZKOCXwt0A2gVKxr4VTgicF6QKlYraGUwp9QbaBUrE2hlOKXUH6gFIxOsMpA74gfUKp2FrDKUOukF1AqZi8wSmDtpBdQqlYvMMpw1WQfUCpGDqDUw4UJMvrbhRKx9f3DxH2lj8SsCWgAAAAAElFTkSuQmCC" alt=""></span>
+                <span class="label4"><img class="iconsize" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAA6CAYAAAAURcGYAAAAAXNSR0IArs4c6QAABFxJREFUaAXtmUtS3DAQhttmIMtwBHIC5gYxeVRlFzgBwyIhrMINGE4AWZHHgnACWKYqITE3gBMEbsDswmPs9D+eDrL8kjWygRSqoqyW+vVJlqURHt2T8oI+xXVT9esa3Cf9TlWyAe3OTtPVfERR1yNvligOYMPDOMfyHFczJab41CM6TTq8kOVzn/zjK5o+CWnlPGPQUAPnkC0v6XOXE1rmnoD/ulmNiVqO2Trkgdn7Tm9RNyo2r2UKjh1sMFSvaEaMsqihhBlm9e1DevehyswaDjPFr91+W1A6CCD5tV0qm0kruAQs/sVTOKsHFZmDnxB5x8k6ikK0ezR1XpRM8loPx/78AOuTVynW7Dxs8wrr8Lr0Fop82sB1Yor6HFQHG3CwA07iYEgzYd2PgJZgKDD4OE3RZcDyIg/UIj8fSx8GF7mgT9omffLX0nutOdm8ppntukCaj1xx7HM0aADt0OU6K27cKGdyuemyqGX2uabA9NwAilh6u0sZcAPVYYf+dFW5yboei5fCmct4DBeHqsNotPjVlibrfmogPYqPXUZjOC9UHfLHRVkDao/7On+F36e9pnNJ99WXvIB25jrk/1ZN+fVYOqTVA7XNdf0Z7fR4b9tV/V5T9CSktVO1bZK6D2cMs6c52cXXTGtzJsK3R/6W6hA5uASD79HBecj7C8/esgTDntOhi32WF6TN5TPxnd5bkUNZDJtNfLQVjEdsM+3cC57Tx9Rrk+63kxKfvBrSZdP1rMH9CA6VH7TaT45ZkJLCH5eeS0D4gk/xP34eIbbW5kT8BwdvQ3qEc+CZ6tkVYB4YBpM38kU1nst6Cg6nBj68IlhqY58UMA8MMfhr2WvimCcDlIJDIw69DBNw1QlgERhiaAdshHdaMnDwXgaI/ck0A+hi1jX9QRtgiJkLh45iQH/LZA/E4UDfy9hta2BgKIRDZx4g9sApuuijv6xMkbcOXUWnVTDELYWDAgD5CmIddSn8Wj2Veskz9TsRPuCrRN95VyUcIv6kta9a5K4mZ0QegDm1MceH2t1I3QiukcgtOP2v4SpvnFsYYKMQfETj71O98jBz9carGW3rnzzNpHP7Xq3XXM2RTJ1T28I2XnP8U2jPNim2PbC1ncTOGG58DWAzA4OqK4RJAMpsjeFwDcC3U5UnEz0YbJq4QtDj5MnGcDC2SdLGJi9Rm7ZacDYBbtPGBs543en3MW2DWsBFiyZJQ8ejqNc2kBqv9nlNjPOuw6WPwfb4Or4nsotnzX11FNJi5pJU8fuMf4Cu6Ik3AabHMJWtZ840gCs9m5lzFfvBz8MIPIyA2QhkPiiv6EswpBj/8Xlq5uJ2tPh27YjvRvvf6E1YlEEGThTvKqQJlDAUwonCXYGsAyW5V8KJ4m1B2kBJzsZwYtAW5CRQkmttODFsCtIFlORoDScOXEG6hJLcJoYTR7aQTUBJTs7gxKEpZJNQkotzOHFcBNkGlOTQGJwEEEjIVScKsXH1/AvCdZGJi3F2bAAAAABJRU5ErkJggg==" alt=""></span>
+<!--                 <input class="mdl-slider mdl-js-slider" type="range" min="0" max="24" value="0" step="1" tabindex="0">
+            </div> -->
+        </div>
+        <div id="colorSection" class="mdl-card__actions mdl-card--border">
+            <h3 class="mdl-card__title-text custom-head-font">Select Light Color:</h3>
+            <!--     <div class="radioButtonsRow">
+    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect leftButton" for="option-1color">
+        <input type="radio" id="option-1color" class="mdl-radio__button" name="options2" value="1" checked>
+        <span class="mdl-radio__label">Colors</span>
+    </label>
+    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect rightButton" for="option-2scene">
+      <input type="radio" id="option-2scene" class="mdl-radio__button" name="options2" value="2">
+      <span class="mdl-radio__label">Scenes</span>
+    </label>
+    </div> -->
+            <!-- Color Picker -->
+            <div class="color-filters color-row-1">
+                <ul>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="red2-filter">
+                        <label for="red2-filter" id="red2-filter"></label>
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="orange2-filter">
+                        <label for="orange2-filter" id="orange2-filter">
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="yellow2-filter">
+                        <label for="yellow2-filter" id="yellow2-filter"></label>
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="green2-filter">
+                        <label for="green2-filter" id="green2-filter"></label>
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="teal2-filter">
+                        <label for="teal2-filter" id="teal2-filter"></label>
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="blue2-filter">
+                        <label for="blue2-filter" id="blue2-filter"></label>
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="purple2-filter">
+                        <label for="purple2-filter" id="purple2-filter"></label>
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="pink2-filter">
+                        <label for="pink2-filter" id="pink2-filter"></label>
+                    </li>
+                </ul>
+            </div>
+            <div class="color-filters color-row-2">
+                <ul>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="red-filter">
+                        <label for="red-filter" id="red-filter"></label>
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="orange-filter">
+                        <label for="orange-filter" id="orange-filter">
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="yellow-filter">
+                        <label for="yellow-filter" id="yellow-filter"></label>
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="green-filter">
+                        <label for="green-filter" id="green-filter"></label>
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="teal-filter">
+                        <label for="teal-filter" id="teal-filter"></label>
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="blue-filter">
+                        <label for="blue-filter" id="blue-filter"></label>
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="purple-filter">
+                        <label for="purple-filter" id="purple-filter"></label>
+                    </li>
+                    <li>
+                        <input class="color-radio" type="radio" name="colorFilters" id="pink-filter">
+                        <label for="pink-filter" id="pink-filter"></label>
+                    </li>
+                </ul>
+            </div>
+            <div class="color-filters-3 color-row-3">
+                <ul>
+                    <li class="bottom-selectors">
+                        <input class="color-radio neutral-filter" type="radio" name="colorFilters" id="neutral-filter">
+                        <label class="neutral-filter" for="neutral-filter" id="neutral-filter"></label>
+                        <p class="color-selector-label">Coolest</p>
+                    </li>
+                    <li class="bottom-selectors">
+                        <input class="color-radio neutral-filter" type="radio" name="colorFilters" id="neutral-filter2">
+                        <label class="neutral-filter"  for="neutral-filter2" id="neutral-filter2"></label>
+                        <p class="color-selector-label">Cooler</p>
+                    </li>
+                    <li class="bottom-selectors">
+                        <input class="color-radio neutral-filter" type="radio" name="colorFilters" id="neutral-filter3">
+                        <label class="neutral-filter"  for="neutral-filter3" id="neutral-filter3"></label>
+                        <p class="color-selector-label">Cool</p>
+                    </li>
+                    <li class="bottom-selectors">
+                        <input class="color-radio neutral-filter" type="radio" name="colorFilters" id="neutral-filter4">
+                        <label class="neutral-filter"  for="neutral-filter4" id="neutral-filter4"></label>
+                        <p class="color-selector-label">Cool-ish</p>
+                    </li>
+                    <li class="bottom-selectors">
+                        <input class="color-radio classic-filter" type="radio" name="colorFilters" id="classic-filter">
+                        <label class="classic-filter" for="classic-filter" id="classic-filter"></label>
+                        <p class="color-selector-label">Warm-ish</p>
+                    </li>
+                    <li class="bottom-selectors">
+                        <input class="color-radio classic-filter" type="radio" name="colorFilters" id="classic-filter2">
+                        <label class="classic-filter" for="classic-filter2" id="classic-filter2"></label>
+                        <p class="color-selector-label">Warm</p>
+                    </li>
+                    <li class="bottom-selectors">
+                        <input class="color-radio classic-filter" type="radio" name="colorFilters" id="classic-filter3">
+                        <label class="classic-filter" for="classic-filter3" id="classic-filter3"></label>
+                        <p class="color-selector-label">Warmer</p>
+                    </li>
+                    <li class="bottom-selectors">
+                        <input class="color-radio classic-filter" type="radio" name="colorFilters" id="classic-filter4">
+                        <label class="classic-filter" for="classic-filter4" id="classic-filter4"></label>
+                        <p class="color-selector-label">Warmest</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-snackbar mdl-js-snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button type="button" class="mdl-snackbar__action"></button>
+        </div>
+    </div>
+    </div>
+    <!-- <div id="status"></div> -->
+    <script type="text/javascript" src="libs/chrome-ex-oauth2/oauth2.js"></script>
+    <script type="text/javascript" src="popup.js"></script>
+    <script type="text/javascript" src="ui.js"></script>
+    <script type="text/javascript" src="analytics.js"></script>
+    </script>
+</body>
+
+</html>
