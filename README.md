@@ -7,13 +7,23 @@ This is an open-source version of the previously maintained LIFX Web Control Chr
 To use this extension in Chrome:
 
 1. Clone or download this repository.
-2. Open Chrome and navigate to `chrome://extensions/`.
-3. Enable "Developer mode" in the top right corner.
-4. Click "Load unpacked" and select the directory containing the extension files.
+2. Generate your own API credentials at [api.developer.lifx.com](https://api.developer.lifx.com).
+3. Open the file `libs/chrome-ex-oauth2/oauth2.js` and replace the `client_id` and `client_secret` with your own generated credentials.
+4. Open Chrome and navigate to `chrome://extensions/`.
+5. Enable "Developer mode" in the top right corner.
+6. Click "Load unpacked" and select the directory containing the extension files.
+
+## API Credentials
+
+You must use your own API credentials for this extension to work:
+
+1. Go to [api.developer.lifx.com](https://api.developer.lifx.com) and sign in or create an account.
+2. Create a new OAuth 2 application to get your `client_id` and `client_secret`.
+3. In the `oauth2.js` file, replace the existing `client_id` and `client_secret` values with your new credentials.
 
 ## Usage
 
-Once installed, you should be able to use the extension to control your LIFX lights. However, please be aware that some features may not work as expected due to lack of recent updates.
+Once installed and configured with your API credentials, you should be able to use the extension to control your LIFX lights. However, please be aware that some features may not work as expected due to lack of recent updates.
 
 ## Disclaimer
 
